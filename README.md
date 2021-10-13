@@ -21,10 +21,10 @@ npm install
 If you don't have nodemon running globally, install:
 
 ```bash
-npm i nodemon
+npm i -g nodemon
 ```
 
-Creat a dotenv file and add
+Create a dotenv file and add
 
 ```bash
 HOST=hostname
