@@ -2,19 +2,23 @@ const http = require('http');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const { getAppointments, getAppointment, createAppointment, deleteAppointment } = require('./controllers/appointmentController');
-
+const { createUser } = require('./controllers/createUser')
+const { loginUser } = require('./controllers/loginUser')
 
 const server = http.createServer((req, res) => {
 
+  const indexUrl = '/api/'
   const id = req.url.split('/')[3];
 
-  if (req.url === '/api/appointments' && req.method === 'GET') {
+  if (req.url === `${indexUrl}user/register` && req.method === 'POST') {
+    createUser(req, res)
+  } else if (req.url === `${indexUrl}user/login` && req.method === 'POST') {
+    loginUser(req, res)
+  } else if (req.url === `${indexUrl}appointments` && req.method === 'GET') {
     getAppointments(req, res, id);
-
-  } else if (req.url === `/api/appointment/${id}` && req.method == 'GET') {
+  } else if (req.url === `${indexUrl}appointment/${id}` && req.method == 'GET') {
     getAppointment(req, res, id);
-
-  } else if (req.url === `/api/appointment` && req.method === 'POST') {
+  } else if (req.url === `${indexUrl}appointment` && req.method === 'POST') {
 
     let data = '';
     req.on('data', chunk => {
@@ -25,7 +29,7 @@ const server = http.createServer((req, res) => {
       createAppointment(req, res, data)
     });
 
-  } else if (req.url === `/api/appointment/${id}` && req.method == 'DELETE') {
+  } else if (req.url === `${indexUrl}appointment/${id}` && req.method == 'DELETE') {
     deleteAppointment(req, res, id);
 
   } else {
