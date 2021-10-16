@@ -4,6 +4,8 @@ require('dotenv').config();
 const { getAppointments, getAppointment, createAppointment, deleteAppointment } = require('./controllers/appointmentController');
 const { createUser } = require('./controllers/createUser')
 const { loginUser } = require('./controllers/loginUser')
+const { createBookAppointment } = require('./controllers/bookAppointmentController');
+const { updateAppointment } = require('./controllers/appointmentController');
 
 
 const server = http.createServer((req, res) => {
@@ -22,6 +24,10 @@ const server = http.createServer((req, res) => {
     createAppointment(req, res);
   } else if (req.url === `/api/appointment/${id}` && req.method === 'DELETE') {
     deleteAppointment(req, res, id);
+  } else if (req.url === `/api/appointment/${id}` && req.method === 'PATCH') {
+    updateAppointment(req, res, id);
+  } else if (req.url === `/api/book-appointment` && req.method === 'POST') {
+    createBookAppointment(req, res);
   } else {
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ message: 'Route not found' }));
@@ -44,5 +50,6 @@ async function connectDB() {
     console.log(`Failed to connect to database. ${error}`);
   }
 }
+mongoose.set("debug", true);
 
 connectDB();

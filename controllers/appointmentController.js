@@ -6,7 +6,7 @@ const Appointment = require('../models/appointment');
 // @route   GET /api/appointments
 async function getAppointments(req, res) {
   try {
-   const appointment = await Appointment.find(); 
+    const appointment = await Appointment.find();
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(appointment));
@@ -15,6 +15,7 @@ async function getAppointments(req, res) {
     console.log(error);
   }
 }
+
 
 
 // @desc    Get one appointment
@@ -40,6 +41,7 @@ async function getAppointment(req, res, id) {
 }
 
 
+
 // @desc    Create appointment
 // @route   POST /api/appointment
 async function createAppointment(req, res) {
@@ -52,10 +54,9 @@ async function createAppointment(req, res) {
     }
 
     const data = Buffer.concat(buffers).toString();
-    console.log(data, 'raw data')
 
-    const requestBody = JSON.parse(data)
-    console.log(requestBody, 'REQEUEST')
+    const requestBody = JSON.parse(data);
+
     const appointment = await Appointment.create(requestBody);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -75,21 +76,23 @@ async function createAppointment(req, res) {
 }
 
 
+
 // @desc    Delete one appointment
-// @route   GET /api/appointment/:id
+// @route   DELETE /api/appointment/:id
 async function deleteAppointment(req, res, id) {
   try {
+
     const appointment = await Appointment.findByIdAndDelete(id)
-   
+
     if (appointment) {
       res.writeHead(200, { 'Content-Type': 'application/json' })
-      res.end(JSON.stringify({ message: `Appointment ${id} removed` }))
+      res.end(JSON.stringify({ message: `Appointment with id: ${id} was deleted` }))
     } else {
       res.writeHead(404, { 'Content-Type': 'application/json' })
       res.end(JSON.stringify({ message: 'Appointment Not Found' }))
     }
-  
-   
+
+
   } catch (error) {
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(
@@ -104,9 +107,53 @@ async function deleteAppointment(req, res, id) {
 }
 
 
+
+// @desc    Update available date 
+// @route   PATCH /api/appointment/:id
+async function updateAppointment(req, res, id) {
+  try {
+
+    const buffers = [];
+
+    for await (const chunk of req) {
+      buffers.push(chunk);
+    }
+
+    const data = Buffer.concat(buffers).toString();
+
+    const requestBody = JSON.parse(data);
+    const { isTaken, availableTimeIndex, timeIndex } = requestBody;
+
+    const appointment = await Appointment.findById(id);
+
+    // Update the field and save to database
+    const response = appointment.availableTimes[availableTimeIndex].times[timeIndex].isTaken = isTaken;
+    await appointment.save();
+
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(
+      {
+        isTaken: response,
+        statusCode: res.statusCode
+      }))
+
+  } catch (error) {
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(
+      {
+        message: `isTaken field can not be updated`,
+        error: error.message,
+        statusCode: res.statusCode
+      }
+    ));
+  }
+}
+
+
 module.exports = {
   getAppointments,
   getAppointment,
   createAppointment,
-  deleteAppointment
+  deleteAppointment,
+  updateAppointment
 }
