@@ -42,10 +42,21 @@ async function getAppointment(req, res, id) {
 
 // @desc    Create appointment
 // @route   POST /api/appointment
-async function createAppointment(req, res, data) {
+async function createAppointment(req, res) {
 
   try {
-    const appointment = await Appointment.create(JSON.parse(data));
+    const buffers = [];
+
+    for await (const chunk of req) {
+      buffers.push(chunk);
+    }
+
+    const data = Buffer.concat(buffers).toString();
+    console.log(data, 'raw data')
+
+    const requestBody = JSON.parse(data)
+    console.log(requestBody, 'REQEUEST')
+    const appointment = await Appointment.create(requestBody);
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(appointment));
