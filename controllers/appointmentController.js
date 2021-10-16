@@ -6,7 +6,7 @@ const Appointment = require('../models/appointment');
 // @route   GET /api/appointments
 async function getAppointments(req, res) {
   try {
-    const appointment = await Appointment.find();
+   const appointment = await Appointment.find(); 
 
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(appointment));

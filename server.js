@@ -9,7 +9,7 @@ const server = http.createServer((req, res) => {
   const id = req.url.split('/')[3];
 
   if (req.url === '/api/appointments' && req.method === 'GET') {
-    getAppointments(req, res, id);
+    getAppointments(req, res );
 
   } else if (req.url === `/api/appointment/${id}` && req.method == 'GET') {
     getAppointment(req, res, id);
@@ -22,7 +22,7 @@ const server = http.createServer((req, res) => {
     });
 
     req.on('end', () => {
-      createAppointment(req, res, data)
+      createAppointment(req, res, data);
     });
 
   } else if (req.url === `/api/appointment/${id}` && req.method == 'DELETE') {
