@@ -51,7 +51,7 @@ const UserController = (serviceContainer) => {
     }
     
     
-    // @desc    Create New User
+    // @desc    Login User
     // @route   POST /api/user/login
     async function loginUser(req, res) {
     
