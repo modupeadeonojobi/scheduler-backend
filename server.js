@@ -8,6 +8,7 @@ const { createBookAppointment } = require('./controllers/bookAppointmentControll
 const { updateAppointment } = require('./controllers/appointmentController');
 
 
+
 const server = http.createServer((req, res) => {
 
   const id = req.url.split('/')[3];
@@ -37,19 +38,25 @@ const server = http.createServer((req, res) => {
 
 
 // Database connection
-const dbURI = process.env.URI;
-const PORT = process.env.PORT || 5000;
 
-async function connectDB() {
-  try {
-    await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
-    server.listen(PORT, () => console.log(`Listening for requests on port ${PORT}`));
-    console.log('Connected to database');
+  const dbURI = process.env.URI;
+  const PORT = process.env.PORT || 5000;
 
-  } catch (error) {
-    console.log(`Failed to connect to database. ${error}`);
+  async function connectDB() {
+    try {
+
+        await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+        server.listen(PORT, () => console.log(`Listening for requests on port ${PORT}`));
+        console.log('Connected to database');
+
+    } catch (error) {
+      console.log(`Failed to connect to database. ${error}`);
+    }
   }
-}
-mongoose.set("debug", true);
+  connectDB();
 
-connectDB();
+// mongoose.set("debug", true);
+
+
+
+module.exports = server;
