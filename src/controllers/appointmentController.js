@@ -123,10 +123,12 @@ async function updateAppointment(req, res, id) {
 
     const requestBody = JSON.parse(data);
     const { isTaken, availableTimeIndex, timeIndex } = requestBody;
+    console.log(isTaken, availableTimeIndex, timeIndex )
 
     const appointment = await Appointment.findById(id);
 
     // Update the field and save to database
+    console.log(appointment.availableTimes[availableTimeIndex])
     const response = appointment.availableTimes[availableTimeIndex].times[timeIndex].isTaken = isTaken;
     await appointment.save();
 

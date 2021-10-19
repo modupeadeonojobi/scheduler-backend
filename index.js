@@ -15,7 +15,6 @@ const server = http.createServer((req, res) => {
 // Database connection
 const uri = process.env.MONGODB_URI
 const PORT = process.env.PORT || 5000;
-console.log(uri, PORT)
 
 async function connectDB() {
   try {
