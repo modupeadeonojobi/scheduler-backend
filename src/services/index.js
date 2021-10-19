@@ -4,15 +4,15 @@ const bookAppointment = require('./bookAppointment')
 
 const ContainerService = () => {
     return {
-        createUser: createUser,
-        loginUser: loginUser,
-        getUsers: getUsers,
-        getAppointments: getAppointments,
-        getAppointment: getAppointment,
-        createAppointment: createAppointment,
-        deleteAppointment: deleteAppointment,
-        updateAppointment: updateAppointment,
-        bookAppointment: bookAppointment
+        createUser,
+        loginUser,
+        getUsers,
+        getAppointments,
+        getAppointment,
+        createAppointment,
+        deleteAppointment,
+        updateAppointment,
+        bookAppointment
     }
 }
 

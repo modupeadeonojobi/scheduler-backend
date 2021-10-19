@@ -8,6 +8,7 @@ const should = chai.should();
 const server = require('../server');
 const chaiHttp = require('chai-http');
 
+// TODO:Write test for all appointment endpoints
 
 
 chai.use(chaiHttp);
