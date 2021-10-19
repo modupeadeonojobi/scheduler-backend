@@ -4,11 +4,10 @@
   "description": "A schedule app",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "cross-env NODE_ENV=test mocha --exit",
-    "dev": "cross-env NODE_ENV=dev nodemon server.js"
-    // "start": "node index.js",
-    // "dev": "nodemon index.js"
+    "start": "node index.js",
+    "dev": "cross-env NODE_ENV=dev nodemon index.js",
+    "test": "cross-env NODE_ENV=test mocha --exit"
+
   },
   "repository": {
     "type": "git",
