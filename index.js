@@ -1,18 +1,17 @@
-
-
 const http = require('http');
 const mongoose = require('mongoose');
 const routeHandler = require('./src/routehandler');
 require('dotenv').config();
 
 
-
 const server = http.createServer((req, res) => {
+
   routeHandler(req, res)
 });
 
 
-// Database connection
+
+// Database connection MONGODB ATLAS
 const uri = process.env.MONGODB_URI
 const PORT = process.env.PORT || 5000;
 
