@@ -1,10 +1,11 @@
-const { getAppointments, getAppointment, createAppointment, deleteAppointment } = require('./controllers/appointmentController');
+const AppointmentController = require('./controllers/appointmentController')
 const UserController = require('./controllers/userController')
-const { createBookAppointment } = require('./controllers/bookAppointmentController');
-const { updateAppointment } = require('./controllers/appointmentController');
+const BookAppointmentController = require('./controllers/bookAppointmentController');
 const serviceContainer = require('./services/index')
 
 const UserControllerHandler = UserController(serviceContainer)
+const AppointmentControllerHandler = AppointmentController(serviceContainer)
+const BookAppointmentControllerHandler = BookAppointmentController(serviceContainer)
 
 const routeHandler = (req, res) => {
     const id = req.url.split('/')[3];
@@ -15,18 +16,18 @@ const routeHandler = (req, res) => {
         UserControllerHandler.loginUser(req, res);
     } else if (req.url === `/api/users` && req.method === 'GET') {
         UserControllerHandler.getUsers(res);
-    }else if (req.url === '/api/appointments' && req.method === 'GET') {
-        getAppointments(req, res);
-    } else if (req.url === `/api/appointment/${id}` && req.method === 'GET') {
-        getAppointment(req, res, id);
+    } else if (req.url === '/api/appointments' && req.method === 'GET') {
+        AppointmentControllerHandler.getAppointments(res);
     } else if (req.url === `/api/appointment` && req.method === 'POST') {
-        createAppointment(req, res);
+        AppointmentControllerHandler.createAppointment(req, res);
+    } else if (req.url === `/api/appointment/${id}` && req.method === 'GET') {
+        AppointmentControllerHandler.getAppointment(res, id);
     } else if (req.url === `/api/appointment/${id}` && req.method === 'DELETE') {
-        deleteAppointment(req, res, id);
+        AppointmentControllerHandler.deleteAppointment(res, id);
     } else if (req.url === `/api/appointment/${id}` && req.method === 'PATCH') {
-        updateAppointment(req, res, id);
+        AppointmentControllerHandler.updateAppointment(req, res, id);
     } else if (req.url === `/api/book-appointment` && req.method === 'POST') {
-        createBookAppointment(req, res);
+        BookAppointmentControllerHandler.createBookAppointment(req, res);
     } else {
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ message: 'Route not found' }));

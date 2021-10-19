@@ -118,16 +118,8 @@ const UserController = (serviceContainer) => {
     
     // @desc    Get all users
     // @route   GET /api/users
-    async function getUsers(res) {
-        try {
-            serviceContainer().getUsers(res)
-        } catch (error) {
-            response(res, 404, {
-                message: 'An error occurred. Please try again',
-                error:  error.message,
-                statusCode: 404
-            })
-        }
+    function getUsers(res) {
+        serviceContainer().getUsers(res)
     }
 
     return {
