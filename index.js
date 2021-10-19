@@ -10,12 +10,12 @@ const server = http.createServer((req, res) => {
 
 
 // Database connection
-const dbURI = process.env.URI;
+const uri = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 5000;
 
 async function connectDB() {
   try {
-    await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     server.listen(PORT, () => console.log(`Listening for requests on port ${PORT}`));
     console.log('Connected to database');
 
