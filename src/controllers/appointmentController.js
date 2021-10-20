@@ -1,4 +1,4 @@
-const Appointment = require('../models/appointment');
+// const Appointment = require('../models/appointment');
 
 const AppointmentController = (serviceContainer) => {
 
@@ -9,7 +9,7 @@ const AppointmentController = (serviceContainer) => {
 	}
   
   
-	// @desc    Get one appointment
+	// @desc    Get a single appointment
 	// @route   GET /api/appointment/:id
 	async function getAppointment(res, id) {	
 		serviceContainer().getAppointment(res, id)

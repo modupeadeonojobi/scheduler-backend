@@ -57,7 +57,7 @@ const updateAppointment = async(requestBody, res, id) => {
     
         const appointment = await Appointment.findById(id);
     
-        // Update the field and save to database
+        // Update availabilty time for false to true
         const takenResponse = appointment.availableTimes[availableTimeIndex].times[timeIndex].isTaken = isTaken;
         await appointment.save();
     
@@ -68,7 +68,7 @@ const updateAppointment = async(requestBody, res, id) => {
     } catch (error) {
         response(res, 404, {
             message:  'isTaken field can not be updated',
-            error:  error.message,
+            error: error.message,
             statusCode: 404
         })
     }
