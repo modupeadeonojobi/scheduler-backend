@@ -28,6 +28,7 @@ const routeHandler = (req, res) => {
         AppointmentControllerHandler.updateAppointment(req, res, id);
     } else if (req.url === `/api/book-appointment` && req.method === 'POST') {
         BookAppointmentControllerHandler.createBookAppointment(req, res);
+    
     } else {
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ message: 'Route not found' }));

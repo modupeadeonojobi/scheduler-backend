@@ -1,21 +1,23 @@
 const http = require('http');
 const mongoose = require('mongoose');
-const routeHandler = require('./routehandler')
+const routeHandler = require('./routehandler');
 require('dotenv').config();
 
 
 const server = http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Request-Method', '*');
+  res.setHeader('Access-Control-Request-Methods', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Max-Age', 86400)
+
   if (req.method === 'OPTIONS') {
-    res.writeHead(301, {
-      Location: req.url
-    })
+        res.writeHead(204, {
+        Location: req.url
+        })
   }
+
 
   routeHandler(req, res)
 });
