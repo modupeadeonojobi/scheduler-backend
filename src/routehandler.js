@@ -10,7 +10,12 @@ const BookAppointmentControllerHandler = BookAppointmentController(serviceContai
 const routeHandler = (req, res) => {
     const id = req.url.split('/')[3];
 
-    if (req.url === `/api/user/register` && req.method === 'POST') {
+    if (req.method === 'OPTIONS') {
+        res.writeHead(200, {
+          'message' : 'allowed'
+        })
+        res.end()
+    } else if (req.url === `/api/user/register` && req.method === 'POST') {
         UserControllerHandler.createUser(req, res);
     } else if (req.url === `/api/user/login` && req.method === 'POST') {
         UserControllerHandler.loginUser(req, res);

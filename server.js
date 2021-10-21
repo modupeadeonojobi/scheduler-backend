@@ -11,11 +11,6 @@ const server = http.createServer((req, res) => {
   res.setHeader('Access-Control-Allow-Headers', '*');
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Max-Age', 86400)
-  if (req.method === 'OPTIONS') {
-    res.writeHead(301, {
-      Location: req.url
-    })
-  }
 
   routeHandler(req, res)
 });
