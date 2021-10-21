@@ -1,6 +1,6 @@
 const http = require('http');
 const mongoose = require('mongoose');
-const routeHandler = require('./src/routehandler');
+const routeHandler = require('./routehandler')
 require('dotenv').config();
 
 
