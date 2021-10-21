@@ -1,4 +1,3 @@
-// const Appointment = require('../models/appointment');
 
 const AppointmentController = (serviceContainer) => {
 

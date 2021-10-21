@@ -10,7 +10,11 @@ const BookAppointmentControllerHandler = BookAppointmentController(serviceContai
 const routeHandler = (req, res) => {
     const id = req.url.split('/')[3];
 
-    if (req.url === `/api/user/register` && req.method === 'POST') {
+    if (req.method === 'OPTIONS') {
+        res.setHeader(200, {
+          'message' : 'allowed'
+        })
+    } else if (req.url === `/api/user/register` && req.method === 'POST') {
         UserControllerHandler.createUser(req, res);
     } else if (req.url === `/api/user/login` && req.method === 'POST') {
         UserControllerHandler.loginUser(req, res);
@@ -28,7 +32,6 @@ const routeHandler = (req, res) => {
         AppointmentControllerHandler.updateAppointment(req, res, id);
     } else if (req.url === `/api/book-appointment` && req.method === 'POST') {
         BookAppointmentControllerHandler.createBookAppointment(req, res);
-    
     } else {
         res.writeHead(404, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ message: 'Route not found' }));
