@@ -2,10 +2,11 @@ const AppointmentController = require('./controllers/appointmentController')
 const UserController = require('./controllers/userController')
 const BookAppointmentController = require('./controllers/bookAppointmentController');
 const serviceContainer = require('./services/index')
+const { response } = require('./helpers/function')
 
-const UserControllerHandler = UserController(serviceContainer)
-const AppointmentControllerHandler = AppointmentController(serviceContainer)
-const BookAppointmentControllerHandler = BookAppointmentController(serviceContainer)
+const UserControllerHandler = UserController(serviceContainer, response)
+const AppointmentControllerHandler = AppointmentController(serviceContainer, response)
+const BookAppointmentControllerHandler = BookAppointmentController(serviceContainer, response)
 
 const routeHandler = (req, res) => {
     const id = req.url.split('/')[3];

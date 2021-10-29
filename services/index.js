@@ -1,19 +1,13 @@
-const { createUser, loginUser, getUsers } = require('./user')
-const { getAppointments, getAppointment, createAppointment, deleteAppointment, updateAppointment } = require('./appointment')
+const UserService = require('./userService')
+const AppointmentService = require('./appointmentService')
 const bookAppointment = require('./bookAppointment')
 
 const ContainerService = () => {
     return {
-        createUser,
-        loginUser,
-        getUsers,
-        getAppointments,
-        getAppointment,
-        createAppointment,
-        deleteAppointment,
-        updateAppointment,
+        UserService: UserService(),
+        AppointmentService: AppointmentService(),
         bookAppointment
     }
 }
 
-module.exports = ContainerService
+module.exports = ContainerService()

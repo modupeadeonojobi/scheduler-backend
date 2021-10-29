@@ -1,18 +1,11 @@
-const BookAppointment = require('../models/bookAppointment');
-const response = require('../helpers/function')
+const bookAppointmentRepository = require('../repositories/bookAppointment')
+const { BOOK_APPOINTMENT_ERROR } = require('../helpers/variables')
 
-const bookAppointment = async(requestBody, res) => {
-    try {
-        const bookAppointment = await BookAppointment.create(requestBody);
-        response(res, 200, bookAppointment)
-
-    } catch (error) {
-        response(res, 404,  {
-            message: `Could not book an appointment`,
-            error: error.message,
-            statusCode: res.statusCode
-        })
-    }
+const bookAppointment = async(requestBody) => {
+    const appointment = await bookAppointmentRepository.bookAppointment(requestBody)
+    
+    if (!appointment) throw new Error(BOOK_APPOINTMENT_ERROR)
+    return appointment
 }
 
 module.exports = bookAppointment
