@@ -1,37 +1,36 @@
-const BookAppointmentController = (serviceContainer) => {
-  // @desc    Book appointment
-  // @route   POST /api/book-appointment
-  async function createBookAppointment(req, res) {
+const { getRequestBody } = require("../helpers/function");
+const { INVALID_REQUEST_BODY } = require("../helpers/variables");
 
-    try {
-      const buffers = [];
+const BookAppointmentController = (serviceContainer, response) => {
 
-      for await (const chunk of req) {
-        buffers.push(chunk);
-      }
+	// @desc    Book appointment
+	// @route   POST /api/book-appointment
+	async function createBookAppointment(req, res) {
+		try {
+			const requestBody = await getRequestBody(req)
 
-      const data = Buffer.concat(buffers).toString();
+			// Get formData
+			const { title, host, name, email, venue, slotPicked, comment } = requestBody
 
-      const requestBody = JSON.parse(data);
-      serviceContainer().bookAppointment(requestBody, res);
+			// Validate user input
+			if (!(title && host && venue && name && email && slotPicked)) throw new Error(INVALID_REQUEST_BODY)
 
-    } catch (error) {
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify(
-        {
-          message: `Could not book an appointment`,
-          error: error.message,
-          statusCode: res.statusCode
-        }
-      ))
-    }
-  }
+			const bookedAppointment = await serviceContainer.bookAppointment(requestBody)
+			response(res, 200, bookedAppointment)
+			
+		} catch (error) {
+			if (error.message === INVALID_REQUEST_BODY) {
+                statusCode = 400
+                response(res, statusCode, { error:  error.message })
+			} else {
+				response(res, 404, { error:  error.message })
+			}
+		}
+	}
 
-  return { 
-    createBookAppointment
-  }
+	return {
+		createBookAppointment
+	}
 }
-
-
 
 module.exports = BookAppointmentController

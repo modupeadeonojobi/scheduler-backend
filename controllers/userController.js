@@ -1,52 +1,43 @@
-const User = require("../models/user");
-const bcrypt = require('bcryptjs')
-const response = require('../helpers/function')
+const { getRequestBody } = require('../helpers/function')
+const { USER_EXISTS, INVALID_REQUEST_BODY } = require('../helpers/variables')
 
-const UserController = (serviceContainer) => {
+const UserController = (serviceContainer, response) => {
 
     // @desc    Create New User
     // @route   POST /api/user/register
     async function createUser(req, res) {
         try {
-            const buffers = [];
-    
-            for await (const chunk of req) {
-                buffers.push(chunk);
-            }
-    
-            const data = Buffer.concat(buffers).toString()
-            const result = JSON.parse(data) 
+            const userData = await getRequestBody(req)
     
             // Get user input
-            const { name, email, password, gender } = result;
+            const { name, email, password, gender } = userData
             
             // Validate user input
-            if (!(name && email && password && gender)) {
-                response(res, 400, {
-                    message: 'All input is required',
-                    statusCode: 400
-                })
-            }
+            if (!(name && email && password && gender)) throw new Error(INVALID_REQUEST_BODY)
     
             // check if user already exist
             // Validate if user exist in our database
-            const oldUser = await User.findOne({ email });
-    
-            if (oldUser) {
-                response(res, 409, {
-                    message: 'User Already Exist. Please Login',
-                    statusCode: 409
-                }) 
-            } else {
-                serviceContainer().createUser(result, res)
+            const newUser = await serviceContainer.UserService.checkIfExistingUser(email)
+
+            // register user
+            if (newUser) {
+                const user = await serviceContainer.UserService.registerUser(userData)
+                response(res, 200, user)
             }
           
         } catch (error) {
-            response(res, 404, {
-                message: 'An Error Occured while creating user. Please, try again.',
-                error:  error.message,
-                statusCode: 404
-            })
+            if (error.message === USER_EXISTS || INVALID_REQUEST_BODY) {
+                statusCode = 400
+                response(res, statusCode, {
+                    error:  error.message,
+                })
+            } else {
+                statusCode = 404
+                response(res, statusCode, {
+                    error:  error.message,
+                })
+            }
+
         }
     }
     
@@ -56,57 +47,47 @@ const UserController = (serviceContainer) => {
     async function loginUser(req, res) {
     
         try {
-            const buffers = [];
-    
-            for await (const chunk of req) {
-                buffers.push(chunk);
-            }
-    
-            const data = Buffer.concat(buffers).toString();
-            const result = JSON.parse(data) 
+            const userData = await getRequestBody(req)
     
             // Get user input
-            const { email, password } = result;
+            const { email, password } = userData;
     
             // Validate user input
             if (!(email && password)) {
-                response(res, 400, {
-                    message: 'All input is required',
-                    statusCode: 400
-                })
+                throw new Error(INVALID_REQUEST_BODY)
+
             } else {
     
-                // Validate if user exist in our database
-                const user = await User.findOne({ email }).select('+password');
-        
+                // Validate if user exist in our database and password
+                const user = await serviceContainer.UserService.validateCredentials(email, password)
+                console.log('i got here', user)
                 if (user) {
-                    bcrypt.compare(password, user.password, (err, data) => {
-                        //if error then handle error
-                        if (err) {
-                            response(res, 404, {
-                                message: 'An error occurred. Please try again',
-                                error:  err.message,
-                                statusCode: 404
-                            })
-                        }
-        
-                        //if both match than you can do anything
-                        if (data) {
-                            serviceContainer().loginUser(user, res)
-                        } else {
-                            response(res, 401, {
-                                message: 'Invalid credentials. Please try again',
-                                statusCode: 401
-                            })
-                        }
-                    })
-                } else {
-                    response(res, 401, {
-                        message: 'Invalid details. Please try again',
-                        statusCode: 401
-                    })
+                    response(res, 200, user)
                 }
             }
+
+        } catch (error) {
+            if (error.message === INVALID_REQUEST_BODY) {
+                statusCode = 400
+                response(res, statusCode, {
+                    error:  error.message,
+                })
+            } else {
+                statusCode = 404
+                response(res, statusCode, {
+                    error:  error.message,
+                })
+            }
+        }
+    }
+    
+    // @desc    Get all users
+    // @route   GET /api/users
+    async function getUsers(res) {
+        try {
+            const users = await serviceContainer.UserService.getUsers()
+            response(res, 200, users)
+
         } catch (error) {
             response(res, 404, {
                 message: 'An error occurred. Please try again',
@@ -114,12 +95,6 @@ const UserController = (serviceContainer) => {
                 statusCode: 404
             })
         }
-    }
-    
-    // @desc    Get all users
-    // @route   GET /api/users
-    function getUsers(res) {
-        serviceContainer().getUsers(res)
     }
 
     return {
